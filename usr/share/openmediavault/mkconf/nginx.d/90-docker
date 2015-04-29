@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# Copyright (C) 2013-2014 OpenMediaVault Plugin Developers
+#
+# This file is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+DOCKER_SITE_CONF="/etc/nginx/openmediavault-webgui.d/openmediavault-docker-site.conf"
+
+if [ -e "${DOCKER_SITE_CONF}" ]; then
+    rm ${DOCKER_SITE_CONF}
+fi
+
+cat <<EOF > "${DOCKER_SITE_CONF}"
+location /dockerui/ {
+        proxy_pass  http://127.0.0.1:9000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+EOF
+
+exit 0

@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+# @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
+# @author    Slobberbone <slobberbone4884@gmail.com>
+# @author    Volker Theile <volker.theile@openmediavault.org>
+# @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+# @copyright Copyright (c) 2009-2013 Volker Theile
+# @copyright Copyright (c) 2013-2015 OpenMediaVault Plugin Developers
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+url='https://get.docker.com/'
+
+command_exists() {
+	command -v "$@" > /dev/null 2>&1
+}
+
+echo_docker_as_nonroot() {
+	your_user=your-user
+	[ "$user" != 'root' ] && your_user="$user"
+	# intentionally mixed spaces and tabs here -- tabs are stripped by "<<-EOF", spaces are kept in the output
+	cat <<-EOF
+
+	If you would like to use Docker as a non-root user, you should now consider
+	adding your user to the "docker" group with something like:
+
+	  sudo usermod -aG docker $your_user
+
+	Remember that you will have to log out and back in for this to take effect!
+
+	EOF
+}
+
+
+
+case "$1" in
+    configure)
+
+        if ! getent passwd ${USERNAME} >/dev/null 2>&1; then
+            echo "Adding ${USERNAME} user..."
+            useradd --create-home --groups users --no-user-group --shell /usr/sbin/nologin ${USERNAME}
+        else
+            echo "${USERNAME} user already exists."
+        fi
+
+        echo "Installing docker..."
+				
+				
+	export DEBIAN_FRONTEND=noninteractive
+
+
+	if command_exists docker && [ -e /var/run/docker.sock ]; then
+		(
+			set -x
+			docker version
+		) || true
+	fi
+	echo_docker_as_nonroot
+				
+	docker pull abh1nav/dockerui:latest
+	
+	docker run -d -p 9000:9000 -v /var/run/docker.sock:/docker.sock --name dockerui abh1nav/dockerui:latest -e="/docker.sock"
+
+                
+        omv-mkconf php5fpm
+        service php5-fpm reload
+
+        omv-mkconf nginx
+        service nginx reload
+
+        dpkg-trigger update-fixperms
+        dpkg-trigger update-locale
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument '$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

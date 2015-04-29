@@ -1,0 +1,39 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# kochin <kochinc@outlook.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-docker\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-28 08:18-0500\n"
+"PO-Revision-Date: 2014-11-14 19:48+0000\n"
+"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/openmediavault-docker/language/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Default password:  openmediavault"
+msgstr "預設密碼：openmediavault"
+
+msgid "Default username:  admin"
+msgstr "預設用戶名稱：admin"
+
+msgid ""
+"Give the <b>docker</b> user read or read/write privileges to any shared "
+"folder to be accessed in eXtplorer."
+msgstr "給 <b>docker</b> 用户，對任何於 eXtplorer 中被存取的共享檔案夾，讀 或 讀/寫 的特權。."
+
+msgid "Information"
+msgstr "資訊"
+
+msgid "Open in a new window"
+msgstr "開啟於新視窗內"
+
+msgid "eXtplorer"
+msgstr "eXtplorer"
